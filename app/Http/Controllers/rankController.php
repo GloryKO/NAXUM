@@ -10,18 +10,17 @@ use Illuminate\Support\Facades\Input;
 
 class rankController extends Controller
 {
-    public $total;
-    public $a;
-    public $price;
-     public function index()
+    public function index()
     {
        //$countries = Country::all()->toArray();
        $real_dist=[];
-       $dist = DB::table('users')->paginate(30);
+       $dist = DB::table('users')->paginate(100)->all();
         foreach ($dist as $row) {
             # code...
             if (DB::table('user_category')->where('user_id',$row->id)->where('category_id', 1)->exists()) {
                 // ...
+                $counter = $this->countSales($row->id);
+                $row->count =$counter;
                 array_push($real_dist,$row);
             }else{
                 // return " ";
@@ -31,19 +30,19 @@ class rankController extends Controller
     // return view('index')->with($countries);
     }
 
-    public static function countSales($id)
+    public function countSales($id)
     {
         # code...
         $total=0;
-        $users = DB::table('users')->where('referred_by',$id);
+        $users = DB::table('users')->where('referred_by',$id)->get();
         foreach ($users as $row1) {
             # code...
             // var_dump($row1);
-            // $r_id = $row1->id;
-            // $c_order=DB::select('select count(invoice_number) as total from orders where purchaser_id =?',[$r_id]);
-            // return $c_order->total;
-            return $total;
+            $r_id = $row1->id;
+            $c_order=DB::table('orders')->where('purchaser_id',$r_id)->get();
+            $total = count($c_order);
         }
+        return $total;
     }
     
    

@@ -74,13 +74,22 @@
    <tr>
    </tr>
  </thead>
- <!-- @inject('provider','App\Http\Controllers\salesReportController') -->
- @foreach($distributors as $order)
+ <?php
+//  krsort($distributors);
+ function my_sort($a,$b)
+{
+// if ($a==$b) return 0;
+return ($a->count < $b->count)?-1:1;
+}
 
+$a=$distributors;
+usort($a,"my_sort");
+ ?>
+ @foreach($distributors as $order)
    <tr>
     <td>{{$order->id}}</td>
     <td>{{$order->id}}</td>
-    <td>{{rankController::countSales($order->id)}}</td>
+    <td>{{$order->count}}</td>
 </td>
 
    </tr>
