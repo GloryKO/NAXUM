@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\salesReportController;
+use App\Http\Controllers\rankController;
 use Illuminate\Http\Request;
 
 /*
@@ -16,4 +17,5 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/', [salesReportController::class,'index']);
+Route::get('/rank', [rankController::class,'index']);
 Route::resource('country','salesReportController');

@@ -130,6 +130,7 @@
 
 
 <?php
+$items=[];
  if (isset($_GET['view_btn'])) {
   # code...
   

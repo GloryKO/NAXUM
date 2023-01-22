@@ -16,104 +16,37 @@ class rankController extends Controller
      public function index()
     {
        //$countries = Country::all()->toArray();
-       $dist = DB::select('select * from users');
-        foreach ($dist as $row) {
-            # code...
-            if (DB::table('user_category')->where('user_id',$id)->where('category_id', 1)->exists()) {
-                // ...
-                return $row->first_name." ".$row->last_name;
-            }else{
-                return " ";
-            }
-        }
-       return view('country.rank', ['distributors' => $users]);
-    // return view('index')->with($countries);
-    }
-    
-    public static function getOrderTotal($id)
-    {
-        # code...
-        $total = 0;
-        $qty = 0;
-        $a = 0;
-        $price = 0;
-        $order_item = DB::select('select * from order_items where order_id = ?',[$id]);
-        foreach($order_item as $row1)
-        {
-            $qty = $row1->qantity;
-            $p_id = $row1->product_id;
-            $price;
-            $product = DB::select('select * from products where id = ?',[$p_id]);
-            foreach ($product as $row) {
-                # code...
-                $price = $row->price;
-
-            }
-            $total += $qty * $price;
-        }
-        return $total;
-    }
-
-    public static function getPurchaser($id)
-    {
-        # code...
-        $user = DB::select('select * from users where id = ?',[$id]);
-        foreach ($user as $row) {
-            # code...
-            return $row;
-
-        }
-    }
-
-    public static function getDistributor($id)
-    {
-        # code...
-        $dist = DB::select('select * from users where id = ?',[$id]);
-        foreach ($dist as $row) {
-            # code...
-            if (DB::table('user_category')->where('user_id',$id)->where('category_id', 1)->exists()) {
-                // ...
-                return $row->first_name." ".$row->last_name;
-            }else{
-                return " ";
-            }
-        }
-    }
-
-    public static function getTotalRefer($id)
-    {
-        # code...
-        $total =0;
-        $dist = DB::select('select * from users where referred_by = ?',[$id]);
+       $real_dist=[];
+       $dist = DB::table('users')->paginate(30);
         foreach ($dist as $row) {
             # code...
             if (DB::table('user_category')->where('user_id',$row->id)->where('category_id', 1)->exists()) {
                 // ...
-                $total+=1;
+                array_push($real_dist,$row);
             }else{
                 // return " ";
             }
         }
-        return $total;
+       return view('country.rank', ['distributors' => $real_dist]);
+    // return view('index')->with($countries);
     }
 
-    public static function getItem($id)
+    public static function countSales($id)
     {
         # code...
-        $items = DB::select('select * from order_items where order_id = ?', [$id]);
-        return $items;
-    }
-    public static function getItemDetail($id)
-    {
-        # code...
-        $product = DB::select('select * from products where id = ?', [$id]);
-        foreach ($product as $row) {
+        $total=0;
+        $users = DB::table('users')->where('referred_by',$id);
+        foreach ($users as $row1) {
             # code...
-            return $row;
-
+            // var_dump($row1);
+            // $r_id = $row1->id;
+            // $c_order=DB::select('select count(invoice_number) as total from orders where purchaser_id =?',[$r_id]);
+            // return $c_order->total;
+            return $total;
         }
     }
-
+    
+   
     
    public function create()
     {

@@ -75,10 +75,12 @@
    </tr>
  </thead>
  <!-- @inject('provider','App\Http\Controllers\salesReportController') -->
- @foreach($countries as $order)
+ @foreach($distributors as $order)
 
    <tr>
-    <td>{{$order->invoice_number}}</td>
+    <td>{{$order->id}}</td>
+    <td>{{$order->id}}</td>
+    <td>{{rankController::countSales($order->id)}}</td>
 </td>
 
    </tr>
